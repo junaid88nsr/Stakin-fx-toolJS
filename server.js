@@ -3,10 +3,11 @@ const axios = require('axios');
 const fs = require('fs');
 const xlsx = require('xlsx');
 const bodyParser = require('body-parser');
+require('dotenv').config(); // Add this line to load environment variables from a .env file
 
 const app = express();
 app.use(bodyParser.json());
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const tokens = [
     { symbol: "xtz", id: "tezos" },
@@ -96,7 +97,10 @@ const tokens = [
 async function fetchHistoricalData(token, date) {
     const options = {
         method: 'GET',
-        headers: { accept: 'application/json', 'x-cg-demo-api-key': 'CG-RcVb1FsNiEKkFbSnJztkf4XK' }
+        headers: { 
+            accept: 'application/json', 
+            'x-cg-demo-api-key': process.env.COINGECKO_API_KEY // Use environment variable
+        }
     };
 
     try {
