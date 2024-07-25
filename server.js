@@ -104,7 +104,7 @@ async function fetchHistoricalData(token, date) {
         return { symbol: token.symbol, id: token.id, price: response.data.market_data.current_price.usd };
     } catch (err) {
         console.error(`Error fetching data for ${token.symbol}: ${err}`);
-        return { symbol: token.symbol, id: token.id, price: null };
+        return { symbol: token.symbol, id: token.id, price: null }; // Ensure data is still returned
     }
 }
 
@@ -136,7 +136,12 @@ app.post('/fetch-data', async (req, res) => {
     }
 
     saveToExcel(allData);
-    res.download('historical_rates.xlsx');
+    res.download('historical_rates.xlsx', 'historical_rates.xlsx', (err) => {
+        if (err) {
+            console.error('Error sending file:', err);
+            res.status(500).send('Error sending file.');
+        }
+    });
 });
 
 app.listen(port, () => {
